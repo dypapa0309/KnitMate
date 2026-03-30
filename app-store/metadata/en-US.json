@@ -1,0 +1,19 @@
+{
+  "name": "KnitMate",
+  "subtitle": "A steady knitting row tracker",
+  "keywords": [
+    "knitting",
+    "rows",
+    "counter",
+    "notes",
+    "offline",
+    "craft"
+  ],
+  "description": "KnitMate is a calm, local-first knitting companion built to help you avoid losing your current row. Track row counts, project notes, and recovery history per project without needing a server or account.",
+  "promotionalText": "Track rows, save notes, and recover previous states without breaking your knitting flow.",
+  "supportUrl": "https://knitemate.netlify.app/support/",
+  "marketingUrl": "https://knitemate.netlify.app/",
+  "privacyUrl": "https://knitemate.netlify.app/privacy/",
+  "reviewNotes": "No login is required. The app stores project data only on-device and does not require a test account.",
+  "releaseNotes": "Initial release with project-based row tracking, notes, local history, and restore support."
+}
