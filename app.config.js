@@ -34,6 +34,15 @@ module.exports = withNoCameraPermission({
         photosPermission: "완료 사진을 고르기 위해 사진 보관함 접근이 필요해요.",
       },
     ],
+    [
+      "expo-build-properties",
+      {
+        android: {
+          compileSdkVersion: 35,
+          targetSdkVersion: 35,
+        },
+      },
+    ],
   ],
   ios: {
     supportsTablet: false,
@@ -51,8 +60,6 @@ module.exports = withNoCameraPermission({
     },
     package: "com.knitmate.app",
     versionCode: 10,
-    compileSdkVersion: 35,
-    targetSdkVersion: 35,
   },
   extra: {
     localOnly: false,
