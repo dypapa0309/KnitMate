@@ -17,6 +17,7 @@ const actionLabels: Record<ProjectLog["actionType"], string> = {
   row_increment: "한 단 앞으로 갔어요",
   row_decrement: "한 단 되돌렸어요",
   note_update: "메모를 남겼어요",
+  snapshot: "중간 기록을 남겼어요",
   restore: "이전 흐름으로 돌아갔어요",
 };
 

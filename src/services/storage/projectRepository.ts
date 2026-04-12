@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { PersistedData, Project, ProjectLog } from "@/types/project";
+import { PersistedData, Project, ProjectLog, ProjectSnapshot } from "@/types/project";
 
 const STORAGE_KEY = "knitmate/projects/v1";
 const STORAGE_VERSION = 1;
@@ -9,11 +9,12 @@ const emptyData: PersistedData = {
   version: STORAGE_VERSION,
   projects: [],
   logs: [],
+  snapshots: [],
 };
 
 export interface ProjectRepository {
   load(): Promise<PersistedData>;
-  save(projects: Project[], logs: ProjectLog[]): Promise<void>;
+  save(projects: Project[], logs: ProjectLog[], snapshots: ProjectSnapshot[]): Promise<void>;
 }
 
 class LocalProjectRepository implements ProjectRepository {
@@ -30,18 +31,20 @@ class LocalProjectRepository implements ProjectRepository {
         version: parsed.version ?? STORAGE_VERSION,
         projects: Array.isArray(parsed.projects) ? parsed.projects : [],
         logs: Array.isArray(parsed.logs) ? parsed.logs : [],
+        snapshots: Array.isArray(parsed.snapshots) ? parsed.snapshots : [],
       };
     } catch {
       return emptyData;
     }
   }
 
-  async save(projects: Project[], logs: ProjectLog[]) {
+  async save(projects: Project[], logs: ProjectLog[], snapshots: ProjectSnapshot[]) {
     // 저장 포맷을 한 곳에 모아 두면 이후 SQLite/Supabase 전환 시 영향 범위가 줄어듭니다.
     const payload: PersistedData = {
       version: STORAGE_VERSION,
       projects,
       logs,
+      snapshots,
     };
 
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(payload));

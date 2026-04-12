@@ -42,14 +42,33 @@ a {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: 1.25rem;
   font-weight: 700;
   text-decoration: none;
 }
 
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  padding: 6px;
+  border-radius: 14px;
+  background: rgba(255, 253, 251, 0.9);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 20px rgba(96, 67, 52, 0.08);
+}
+
+.brand-word {
+  letter-spacing: 0.01em;
+}
+
 .nav,
 .footer-links,
-.button-row {
+.button-row,
+.store-row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -111,6 +130,23 @@ a {
 .button.secondary {
   background: var(--paper);
   border-color: var(--border);
+}
+
+.store-row {
+  margin-top: 16px;
+}
+
+.store-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 253, 251, 0.78);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .hero-card,

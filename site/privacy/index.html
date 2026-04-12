@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KnitMate 개인정보처리방침</title>
     <meta name="description" content="KnitMate 개인정보처리방침" />
+    <meta property="og:title" content="KnitMate 개인정보처리방침" />
+    <meta property="og:description" content="KnitMate의 개인정보 수집·이용·보관 기준을 안내합니다." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://knitemate.netlify.app/privacy/" />
+    <meta property="og:image" content="https://knitemate.netlify.app/assets/og-image.png" />
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <div class="site-shell">
       <header class="topbar">
-        <a class="brand" href="/">KnitMate</a>
+        <a class="brand" href="/">
+          <img class="brand-mark" src="/assets/logo-mark.png" alt="KnitMate 로고" />
+          <span class="brand-word">KnitMate</span>
+        </a>
         <nav class="nav">
           <a href="/">홈</a>
           <a href="/support/">지원</a>
@@ -21,44 +30,68 @@
         <section class="page-hero">
           <p class="eyebrow">Privacy Policy</p>
           <h1>개인정보처리방침</h1>
-          <p class="lead">최종 업데이트: 2026년 3월 31일</p>
+          <p class="lead">최종 업데이트: 2026년 4월 12일</p>
         </section>
 
         <section class="content-card">
           <h2>1. 수집하는 정보</h2>
-          <p>
-            KnitMate 현재 버전은 사용자 계정, 서버 저장, 광고 추적 기능을 제공하지 않습니다. 프로젝트
-            제목, 메모, 단수 기록, 히스토리 데이터는 사용자의 기기 로컬 저장소에만 저장됩니다.
-          </p>
+          <p>KnitMate는 다음과 같은 정보를 수집합니다.</p>
+          <ul class="list">
+            <li><strong>계정 정보:</strong> 이메일 주소, 비밀번호(암호화 저장), 사용자명, 자기소개</li>
+            <li><strong>소셜 로그인:</strong> Google 또는 Apple 계정을 통한 OAuth 인증 시 해당 제공자가 전달하는 기본 프로필 정보</li>
+            <li><strong>업로드 콘텐츠:</strong> 프로필 사진, 피드 게시물 사진, 뜨개 스냅샷 이미지</li>
+            <li><strong>커뮤니티 활동:</strong> 피드 게시물, 뜨모저모 게시물, 댓글</li>
+            <li><strong>뜨개 작업 데이터:</strong> 프로젝트 제목, 단수 기록, 메모, 히스토리 — 기기 로컬 저장소에만 보관</li>
+          </ul>
         </section>
 
         <section class="content-card">
           <h2>2. 정보 이용 방식</h2>
+          <ul class="list">
+            <li>계정 생성·로그인 및 본인 확인</li>
+            <li>피드·커뮤니티 기능 제공(게시물, 댓글, 프로필 표시)</li>
+            <li>업로드된 사진 및 스냅샷 저장과 표시</li>
+            <li>앱 오류 파악 및 서비스 개선</li>
+          </ul>
+        </section>
+
+        <section class="content-card">
+          <h2>3. 제3자 서비스</h2>
           <p>
-            로컬에 저장된 데이터는 앱 기능 제공을 위해서만 사용됩니다. 현재 버전에서는 이 데이터가
-            개발자 서버나 제3자 서비스로 전송되지 않습니다.
+            KnitMate는 인증·데이터베이스·파일 저장에 <strong>Supabase</strong>(Supabase Inc., 미국)를 사용합니다.
+            Supabase는 계정 정보, 게시물, 댓글, 업로드 이미지를 처리하며, 자체 개인정보보호 정책에 따라 데이터를 관리합니다.
+            Google 또는 Apple 소셜 로그인을 사용하는 경우 해당 제공자의 개인정보처리방침도 적용됩니다.
           </p>
         </section>
 
         <section class="content-card">
-          <h2>3. 외부 공유</h2>
+          <h2>4. 사진 접근 권한</h2>
           <p>
-            KnitMate는 현재 버전에서 사용자의 프로젝트 데이터나 식별 정보를 외부에 판매하거나 공유하지
-            않습니다.
+            앱은 프로필 사진 설정 및 피드·뜨모저모 게시물 작성 시 기기 사진 보관함에 접근합니다.
+            카메라 직접 촬영 기능은 제공하지 않으며, 사진 보관함 접근은 사용자가 직접 선택한 경우에만 이루어집니다.
           </p>
         </section>
 
         <section class="content-card">
-          <h2>4. 데이터 보관</h2>
+          <h2>5. 데이터 보관 및 삭제</h2>
+          <ul class="list">
+            <li>뜨개 작업 데이터(단수, 메모 등)는 기기 로컬 저장소에만 저장되며, 앱 삭제 시 함께 삭제됩니다.</li>
+            <li>계정 및 소셜 데이터(게시물, 프로필, 업로드 파일)는 Supabase 서버에 보관됩니다.</li>
+            <li>계정 삭제를 원하시면 앱 설정 화면 또는 아래 이메일로 요청하시면 처리해 드립니다.</li>
+          </ul>
+        </section>
+
+        <section class="content-card">
+          <h2>6. 외부 공유</h2>
           <p>
-            데이터는 앱이 설치된 기기의 로컬 저장소에 유지됩니다. 앱을 삭제하거나 기기 데이터를
-            초기화하는 경우 저장된 프로젝트 정보가 삭제될 수 있습니다.
+            KnitMate는 사용자의 개인정보를 광고 목적으로 판매하거나 제3자에게 무단으로 공유하지 않습니다.
+            서비스 운영에 필요한 Supabase 외에는 개인정보를 전달하는 외부 서비스가 없습니다.
           </p>
         </section>
 
         <section class="content-card">
-          <h2>5. 문의</h2>
-          <p>개인정보 관련 문의는 아래 이메일로 보내실 수 있습니다.</p>
+          <h2>7. 문의</h2>
+          <p>개인정보 관련 문의 및 계정 삭제 요청은 아래 이메일로 보내주세요.</p>
           <p><a href="mailto:dypapa0309@gmail.com">dypapa0309@gmail.com</a></p>
         </section>
       </main>

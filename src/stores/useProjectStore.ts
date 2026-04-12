@@ -2,13 +2,14 @@ import { create } from "zustand";
 
 import { projectRepository } from "@/services/storage/projectRepository";
 import { createId } from "@/utils/id";
-import { Project, ProjectDraft, ProjectLog, ProjectLogAction } from "@/types/project";
+import { Project, ProjectDraft, ProjectLog, ProjectLogAction, ProjectSnapshot } from "@/types/project";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 type ProjectState = {
   projects: Project[];
   logs: ProjectLog[];
+  snapshots: ProjectSnapshot[];
   isHydrated: boolean;
   saveStatus: SaveStatus;
   saveError: string | null;
@@ -19,10 +20,12 @@ type ProjectState = {
   incrementRow: (projectId: string) => Promise<void>;
   decrementRow: (projectId: string) => Promise<void>;
   saveQuickNote: (projectId: string, note: string) => Promise<void>;
+  createSnapshot: (projectId: string, input?: { note?: string; photoUri?: string }) => Promise<ProjectSnapshot | null>;
   restoreFromLog: (projectId: string, logId: string) => Promise<void>;
   clearError: () => void;
   getProjectById: (projectId: string) => Project | undefined;
   getLogsByProjectId: (projectId: string) => ProjectLog[];
+  getSnapshotsByProjectId: (projectId: string) => ProjectSnapshot[];
 };
 
 function nowIso() {
@@ -36,6 +39,16 @@ function normalizeRow(value: string) {
   }
 
   return Math.max(0, Math.floor(parsed));
+}
+
+function normalizeRepeatLength(value: string) {
+  const parsed = Number(value);
+  if (Number.isNaN(parsed)) {
+    return undefined;
+  }
+
+  const normalized = Math.max(0, Math.floor(parsed));
+  return normalized > 0 ? normalized : undefined;
 }
 
 function serializeProject(project: Project) {
@@ -60,13 +73,39 @@ function createLog(
   };
 }
 
-async function persistState(projects: Project[], logs: ProjectLog[]) {
-  await projectRepository.save(projects, logs);
+async function persistState(projects: Project[], logs: ProjectLog[], snapshots: ProjectSnapshot[]) {
+  await projectRepository.save(projects, logs, snapshots);
+}
+
+function buildHashtagList(...values: Array<string | undefined>) {
+  const unique = new Set<string>();
+
+  for (const value of values) {
+    const normalized = value?.trim().replace(/^#+/, "").replace(/\s+/g, "");
+    if (normalized) {
+      unique.add(normalized);
+    }
+  }
+
+  return [...unique];
+}
+
+function buildMethodSummary(project: Project) {
+  if (project.tag) {
+    return project.tag;
+  }
+
+  if (project.notes.trim()) {
+    return project.notes.trim().slice(0, 40);
+  }
+
+  return "작업 흐름 기록";
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
   projects: [],
   logs: [],
+  snapshots: [],
   isHydrated: false,
   saveStatus: "idle",
   saveError: null,
@@ -77,6 +116,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({
       projects: data.projects,
       logs: data.logs,
+      snapshots: data.snapshots,
       isHydrated: true,
       saveStatus: "saved",
       saveError: null,
@@ -92,6 +132,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       notes: draft.notes.trim(),
       yarnInfo: draft.yarnInfo.trim(),
       needleInfo: draft.needleInfo.trim(),
+      repeatLength: normalizeRepeatLength(draft.repeatLength),
       currentRow: normalizeRow(draft.initialRow),
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -114,7 +155,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     });
 
     try {
-      await persistState(nextProjects, nextLogs);
+      await persistState(nextProjects, nextLogs, get().snapshots);
       set({
         saveStatus: "saved",
         lastSavedAt: nowIso(),
@@ -141,6 +182,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       notes: draft.notes.trim(),
       yarnInfo: draft.yarnInfo.trim(),
       needleInfo: draft.needleInfo.trim(),
+      repeatLength: normalizeRepeatLength(draft.repeatLength),
       currentRow: normalizeRow(draft.initialRow),
       accentColor: draft.accentColor || undefined,
       tag: draft.tag.trim() || undefined,
@@ -167,7 +209,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     });
 
     try {
-      await persistState(nextProjects, nextLogs);
+      await persistState(nextProjects, nextLogs, get().snapshots);
       set({
         saveStatus: "saved",
         lastSavedAt: nowIso(),
@@ -213,7 +255,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     });
 
     try {
-      await persistState(nextProjects, nextLogs);
+      await persistState(nextProjects, nextLogs, get().snapshots);
       set({
         saveStatus: "saved",
         lastSavedAt: nowIso(),
@@ -258,7 +300,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     });
 
     try {
-      await persistState(nextProjects, nextLogs);
+      await persistState(nextProjects, nextLogs, get().snapshots);
       set({
         saveStatus: "saved",
         lastSavedAt: nowIso(),
@@ -296,7 +338,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     });
 
     try {
-      await persistState(nextProjects, nextLogs);
+      await persistState(nextProjects, nextLogs, get().snapshots);
       set({
         saveStatus: "saved",
         lastSavedAt: nowIso(),
@@ -306,6 +348,64 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         saveStatus: "error",
         saveError: "메모를 저장하지 못했어요.",
       });
+    }
+  },
+
+  createSnapshot: async (projectId, input) => {
+    const project = get().getProjectById(projectId);
+    if (!project) {
+      return null;
+    }
+
+    const snapshot: ProjectSnapshot = {
+      id: createId("snapshot"),
+      projectId,
+      title: project.title,
+      row: project.currentRow,
+      note: (input?.note?.trim() || project.notes.trim()),
+      yarnInfo: project.yarnInfo,
+      needleInfo: project.needleInfo,
+      methodSummary: buildMethodSummary(project),
+      photoUri: input?.photoUri,
+      hashtags: buildHashtagList(project.tag, project.title),
+      createdAt: nowIso(),
+    };
+
+    const log = createLog(
+      projectId,
+      "snapshot",
+      "",
+      JSON.stringify(snapshot),
+      `${snapshot.row}단 중간 기록 저장`,
+    );
+
+    const nextSnapshots = [snapshot, ...get().snapshots];
+    const nextLogs = [log, ...get().logs];
+
+    set({
+      snapshots: nextSnapshots,
+      logs: nextLogs,
+      saveStatus: "saving",
+      saveError: null,
+    });
+
+    try {
+      await persistState(get().projects, nextLogs, nextSnapshots);
+      set({
+        saveStatus: "saved",
+        lastSavedAt: nowIso(),
+      });
+      return snapshot;
+    } catch {
+      const rolledBackSnapshots = get().snapshots.filter((item) => item.id !== snapshot.id);
+      const rolledBackLogs = get().logs.filter((item) => item.id !== log.id);
+      set({
+        snapshots: rolledBackSnapshots,
+        logs: rolledBackLogs,
+        saveStatus: "error",
+        saveError: "중간 기록을 저장하지 못했어요.",
+      });
+      return null;
     }
   },
 
@@ -365,7 +465,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     });
 
     try {
-      await persistState(nextProjects, nextLogs);
+      await persistState(nextProjects, nextLogs, get().snapshots);
       set({
         saveStatus: "saved",
         lastSavedAt: nowIso(),
@@ -385,5 +485,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   getLogsByProjectId: (projectId) =>
     get()
       .logs.filter((log) => log.projectId === projectId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+
+  getSnapshotsByProjectId: (projectId) =>
+    get()
+      .snapshots.filter((snapshot) => snapshot.projectId === projectId)
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
 }));

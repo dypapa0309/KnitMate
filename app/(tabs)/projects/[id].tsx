@@ -29,35 +29,41 @@ export default function ProjectDetailScreen() {
     <Screen scrollable>
       <Stack.Screen options={{ title: project.title }} />
       <SectionHeader
+        showBack
         title={project.title}
-        subtitle={project.tag || "천천히 이어 가는 작업"}
+        subtitle={project.tag}
       />
 
       <Card>
-        <Text style={styles.sectionTitle}>지금 이 작업의 상태</Text>
-        <Text style={styles.info}>현재 단수: {project.currentRow}단</Text>
-        <Text style={styles.info}>실 정보: {project.yarnInfo || "아직 적어 둔 실 정보가 없어요."}</Text>
-        <Text style={styles.info}>바늘 정보: {project.needleInfo || "아직 적어 둔 바늘 정보가 없어요."}</Text>
-        <Text style={styles.info}>마지막으로 정리한 시간: {formatDateTime(project.updatedAt)}</Text>
-        <Text style={styles.info}>마지막으로 손을 댄 시간: {formatDateTime(project.lastWorkedAt)}</Text>
+        <Text style={styles.sectionTitle}>상태</Text>
+        <Text style={styles.info}>단수 · {project.currentRow}단</Text>
+        <Text style={styles.info}>실 · {project.yarnInfo || "-"}</Text>
+        <Text style={styles.info}>바늘 · {project.needleInfo || "-"}</Text>
+        <Text style={styles.info}>수정 · {formatDateTime(project.updatedAt)}</Text>
+        <Text style={styles.info}>작업 · {formatDateTime(project.lastWorkedAt)}</Text>
       </Card>
 
       <Card>
-        <Text style={styles.sectionTitle}>남겨 둔 메모</Text>
+        <Text style={styles.sectionTitle}>메모</Text>
         <Text style={styles.note}>
-          {project.notes || "아직 메모는 비어 있어요. 반복 패턴이나 헷갈리는 지점을 짧게 적어 두면 다음에 다시 잡기 편해져요."}
+          {project.notes || "-"}
         </Text>
       </Card>
 
       <View style={styles.buttonGroup}>
-        <PrimaryButton title="바로 단수 기록하러 가기" onPress={() => router.push(`/projects/${project.id}/work`)} />
+        <PrimaryButton title="기록" onPress={() => router.push(`/projects/${project.id}/work`)} />
         <PrimaryButton
-          title="기록 흐름 보기"
+          title="타임라인"
+          onPress={() => router.push(`/projects/${project.id}/timeline`)}
+          variant="secondary"
+        />
+        <PrimaryButton
+          title="히스토리"
           onPress={() => router.push(`/projects/${project.id}/history`)}
           variant="secondary"
         />
         <PrimaryButton
-          title="작업 정보 다듬기"
+          title="수정"
           onPress={() => router.push(`/projects/${project.id}/edit`)}
           variant="secondary"
         />

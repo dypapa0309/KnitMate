@@ -40,14 +40,13 @@ export default function ResumeTabScreen() {
       <Screen scrollable>
         <AppHeader
           title="이어뜨기"
-          subtitle="가장 최근 작업을 빠르게 다시 잡을 수 있는 자리예요."
           onPressAction={() => router.push("/settings")}
         />
         <EmptyState
-          title="아직 이어서 뜰 작업이 없어요"
-          description="첫 프로젝트를 만들면 가장 최근 작업을 여기에서 바로 다시 열 수 있어요."
+          title="작업 없음"
+          description="새 뜨개 시작"
         />
-        <PrimaryButton title="새 뜨개 시작하기" iconName="add" onPress={() => router.push("/projects/new")} />
+        <PrimaryButton title="새 뜨개" iconName="add" onPress={() => router.push("/projects/new")} />
       </Screen>
     );
   }
@@ -56,7 +55,6 @@ export default function ResumeTabScreen() {
     <Screen scrollable>
       <AppHeader
         title="이어뜨기"
-        subtitle="마지막으로 만졌던 작업을 다시 손에 얹을 수 있도록 가장 가까운 정보만 모아 두었어요."
         onPressAction={() => router.push("/settings")}
       />
 
@@ -89,21 +87,21 @@ export default function ResumeTabScreen() {
         <View style={styles.noteBox}>
           <Ionicons color={colors.textMuted} name="create-outline" size={18} />
           <Text style={styles.note}>
-            {recentProject.notes || "아직 남겨 둔 메모는 없어요. 오늘 느낌이나 다음 시작 지점을 짧게 남겨 두면 좋아요."}
+            {recentProject.notes || "메모 없음"}
           </Text>
         </View>
 
-        <Text style={styles.timestamp}>최근 기록: {formatDateTime(recentProject.lastWorkedAt)}</Text>
+        <Text style={styles.timestamp}>{formatDateTime(recentProject.lastWorkedAt)}</Text>
       </Card>
 
       <View style={styles.buttonGroup}>
         <PrimaryButton
-          title="단수 기록하러 가기"
+          title="기록"
           iconName="chevron-forward"
           onPress={() => router.push(`/projects/${recentProject.id}/work`)}
         />
         <PrimaryButton
-          title="이 작업 자세히 보기"
+          title="상세"
           iconName="albums-outline"
           onPress={() => router.push(`/projects/${recentProject.id}`)}
           variant="secondary"

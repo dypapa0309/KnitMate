@@ -29,6 +29,7 @@ export default function EditProjectScreen() {
     notes: currentProject.notes,
     yarnInfo: currentProject.yarnInfo,
     needleInfo: currentProject.needleInfo,
+    repeatLength: currentProject.repeatLength ? String(currentProject.repeatLength) : "",
     initialRow: String(currentProject.currentRow),
     accentColor: currentProject.accentColor || "",
     tag: currentProject.tag || "",
@@ -42,7 +43,7 @@ export default function EditProjectScreen() {
   return (
     <Screen scrollable>
       <Stack.Screen options={{ title: "프로젝트 수정" }} />
-      <SectionHeader title="프로젝트 수정" subtitle="기본 정보와 시작 단수를 다시 정리할 수 있어요." />
+      <SectionHeader showBack title="프로젝트 수정" subtitle="기본 정보와 시작 단수를 다시 정리할 수 있어요." />
       <ProjectForm initialValue={initialValue} onSubmit={handleSubmit} submitLabel="변경 저장" />
     </Screen>
   );

@@ -6,14 +6,26 @@
     <title>KnitMate | 단수를 잃지 않는 뜨개질 도구</title>
     <meta
       name="description"
-      content="KnitMate는 뜨개질 작업 중 지금 몇 단인지 잃지 않도록 도와주는 온디바이스 작업 도구입니다."
+      content="KnitMate는 뜨개질 작업 중 지금 몇 단인지 잃지 않도록 도와주는 iPhone 및 Android용 뜨개질 앱입니다."
     />
+    <meta property="og:title" content="KnitMate | 단수를 잃지 않는 뜨개질 도구" />
+    <meta
+      property="og:description"
+      content="뜨개질 흐름을 끊지 않고, 현재 단수와 메모를 이어가는 iPhone 및 Android용 뜨개질 앱입니다."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://knitemate.netlify.app/" />
+    <meta property="og:image" content="https://knitemate.netlify.app/assets/og-image.png" />
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <div class="site-shell">
       <header class="topbar">
-        <a class="brand" href="/">KnitMate</a>
+        <a class="brand" href="/">
+          <img class="brand-mark" src="/assets/logo-mark.png" alt="KnitMate 로고" />
+          <span class="brand-word">KnitMate</span>
+        </a>
         <nav class="nav">
           <a href="/support/">지원</a>
           <a href="/privacy/">개인정보처리방침</a>
@@ -23,15 +35,19 @@
       <main>
         <section class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">On-device Knitting Companion</p>
+            <p class="eyebrow">Knitting Companion</p>
             <h1>뜨개질 흐름을 끊지 않고, 지금 단수를 잃지 않도록.</h1>
             <p class="lead">
-              KnitMate는 프로젝트별 현재 단수, 메모, 복구 가능한 히스토리를 기기 안에만 저장하는
-              차분한 작업 도구입니다.
+              KnitMate는 iPhone과 Android에서 프로젝트별 현재 단수, 메모, 복구 가능한 히스토리를
+              관리하고 뜨개 커뮤니티와 함께하는 뜨개질 앱입니다.
             </p>
             <div class="button-row">
               <a class="button primary" href="/support/">지원 페이지</a>
               <a class="button secondary" href="/privacy/">개인정보처리방침</a>
+            </div>
+            <div class="store-row" aria-label="스토어 출시 안내">
+              <span class="store-pill">App Store 출시 준비 중</span>
+              <span class="store-pill">Google Play 출시 준비 중</span>
             </div>
           </div>
 
@@ -64,22 +80,22 @@
           </article>
           <article class="feature-card">
             <h2>빠른 작업 화면</h2>
-            <p>가장 중요한 현재 단수를 크게 보여 주고, 최소 조작으로 `+1 / -1`을 기록합니다.</p>
+            <p>가장 중요한 현재 단수를 크게 보여 주고, 최소 조작으로 +1 / -1을 기록합니다.</p>
           </article>
           <article class="feature-card">
-            <h2>복구 가능한 히스토리</h2>
-            <p>실수로 잘못 수정해도 이전 상태를 기준으로 복구할 수 있고 복구 기록도 따로 남습니다.</p>
+            <h2>뜨개 커뮤니티</h2>
+            <p>피드와 뜨모저모에서 뜨개 작업을 공유하고 다른 메이트들과 소통할 수 있습니다.</p>
           </article>
         </section>
 
         <section class="info-band">
           <div>
-            <p class="eyebrow">Local-first</p>
-            <h2>서버 없이, 계정 없이, 기기 안에서만.</h2>
+            <p class="eyebrow">Privacy First</p>
+            <h2>뜨개 기록은 기기 안에, 커뮤니티는 함께.</h2>
           </div>
           <p>
-            현재 MVP는 로그인이나 외부 동기화 없이 동작하며, 프로젝트 데이터는 기기 로컬 저장소에만
-            보관됩니다.
+            단수·메모·히스토리 등 작업 데이터는 기기 로컬 저장소에만 보관됩니다.
+            피드·프로필 등 소셜 기능은 계정 생성 후 선택적으로 이용할 수 있습니다.
           </p>
         </section>
       </main>

@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
@@ -9,6 +10,8 @@ type AppHeaderProps = {
   subtitle?: string;
   actionIcon?: keyof typeof Ionicons.glyphMap;
   onPressAction?: () => void;
+  showBack?: boolean;
+  onPressBack?: () => void;
 };
 
 export function AppHeader({
@@ -16,9 +19,17 @@ export function AppHeader({
   subtitle,
   actionIcon = "settings-outline",
   onPressAction,
+  showBack = false,
+  onPressBack,
 }: AppHeaderProps) {
   return (
     <View style={styles.wrapper}>
+      {showBack ? (
+        <Pressable accessibilityRole="button" onPress={onPressBack ?? (() => router.back())} style={styles.actionButton}>
+          <Ionicons color={colors.text} name="chevron-back" size={20} />
+        </Pressable>
+      ) : null}
+
       <View style={styles.copy}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}

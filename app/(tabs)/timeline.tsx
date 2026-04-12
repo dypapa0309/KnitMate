@@ -19,6 +19,7 @@ const actionIcons: Record<ProjectLog["actionType"], keyof typeof Ionicons.glyphM
   row_increment: "add-outline",
   row_decrement: "remove-outline",
   note_update: "create-outline",
+  snapshot: "images-outline",
   restore: "refresh-outline",
 };
 
@@ -28,6 +29,7 @@ const actionLabels: Record<ProjectLog["actionType"], string> = {
   row_increment: "한 단 앞으로 갔어요",
   row_decrement: "한 단 뒤로 물렀어요",
   note_update: "메모를 남겼어요",
+  snapshot: "중간 기록을 저장했어요",
   restore: "이전 흐름으로 돌아갔어요",
 };
 
@@ -53,15 +55,14 @@ export default function TimelineTabScreen() {
           <View style={styles.headerBlock}>
             <AppHeader
               title="기록"
-              subtitle="최근 손길이 남긴 흐름을 한눈에 모아 볼 수 있어요."
               onPressAction={() => router.push("/settings")}
             />
           </View>
         }
         ListEmptyComponent={
           <EmptyState
-            title="아직 쌓인 기록이 없어요"
-            description="단수를 한 번 올리거나 메모를 남기면 여기에서 흐름이 하나씩 보이기 시작해요."
+            title="기록 없음"
+            description="단수 · 메모"
           />
         }
         renderItem={({ item }) => {
@@ -76,13 +77,13 @@ export default function TimelineTabScreen() {
                     </View>
                     <View style={styles.logTitleCopy}>
                       <Text style={styles.logTitle}>{actionLabels[item.actionType]}</Text>
-                      <Text style={styles.logProject}>{project?.title || "알 수 없는 작업"}</Text>
+                      <Text style={styles.logProject}>{project?.title || "-"}</Text>
                     </View>
                   </View>
                   <Ionicons color={colors.textMuted} name="chevron-forward" size={18} />
                 </View>
                 <Text numberOfLines={2} style={styles.logNote}>
-                  {item.note || "짧은 메모 없이 저장된 기록이에요."}
+                  {item.note || "-"}
                 </Text>
                 <Text style={styles.logTime}>{formatDateTime(item.createdAt)}</Text>
               </Card>

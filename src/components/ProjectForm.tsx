@@ -15,8 +15,56 @@ type ProjectFormProps = {
   onSubmit: (value: ProjectDraft) => Promise<void>;
 };
 
+const needleSizeOptions = [
+  "US 2",
+  "US 3",
+  "US 4",
+  "US 5",
+  "US 6",
+  "US 7",
+  "US 8",
+  "US 9",
+  "US 10",
+];
+
+const yarnWeightOptions = ["Lace", "Sock", "Fingering", "Sport", "DK", "Worsted", "Bulky"];
+const repeatLengthOptions = ["4", "6", "8", "10", "12"];
+
+function splitPresetValue(value: string, presets: string[]) {
+  const trimmed = value.trim();
+  const matchedPreset = presets.find((preset) => trimmed === preset || trimmed.startsWith(`${preset} · `));
+
+  if (!matchedPreset) {
+    return {
+      preset: "",
+      detail: trimmed,
+    };
+  }
+
+  return {
+    preset: matchedPreset,
+    detail: trimmed.replace(new RegExp(`^${matchedPreset}(?:\\s·\\s)?`), "").trim(),
+  };
+}
+
+function combinePresetValue(preset: string, detail: string) {
+  const trimmedDetail = detail.trim();
+  if (!preset) {
+    return trimmedDetail;
+  }
+
+  return trimmedDetail ? `${preset} · ${trimmedDetail}` : preset;
+}
+
 export function ProjectForm({ initialValue, submitLabel, onSubmit }: ProjectFormProps) {
+  const initialNeedle = splitPresetValue(initialValue.needleInfo, needleSizeOptions);
+  const initialYarn = splitPresetValue(initialValue.yarnInfo, yarnWeightOptions);
+
   const [draft, setDraft] = useState<ProjectDraft>(initialValue);
+  const [selectedNeedleSize, setSelectedNeedleSize] = useState(initialNeedle.preset);
+  const [needleDetail, setNeedleDetail] = useState(initialNeedle.detail);
+  const [selectedYarnWeight, setSelectedYarnWeight] = useState(initialYarn.preset);
+  const [yarnDetail, setYarnDetail] = useState(initialYarn.detail);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,7 +79,11 @@ export function ProjectForm({ initialValue, submitLabel, onSubmit }: ProjectForm
     setError(null);
     setIsSubmitting(true);
     try {
-      await onSubmit(draft);
+      await onSubmit({
+        ...draft,
+        yarnInfo: combinePresetValue(selectedYarnWeight, yarnDetail),
+        needleInfo: combinePresetValue(selectedNeedleSize, needleDetail),
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -42,13 +94,13 @@ export function ProjectForm({ initialValue, submitLabel, onSubmit }: ProjectForm
       <Card>
         <TextField
           label="프로젝트 이름"
-          placeholder="예: 봄 가디건, 아기 모자, 엄마 목도리"
+          placeholder="이름"
           value={draft.title}
           onChangeText={(title) => setDraft((current) => ({ ...current, title }))}
         />
         <TextField
           label="작업 메모"
-          placeholder="반복 패턴, 실 장력, 다음에 기억해야 할 지점을 적어 두세요."
+          placeholder="메모"
           multiline
           value={draft.notes}
           onChangeText={(notes) => setDraft((current) => ({ ...current, notes }))}
@@ -61,21 +113,84 @@ export function ProjectForm({ initialValue, submitLabel, onSubmit }: ProjectForm
           onChangeText={(initialRow) => setDraft((current) => ({ ...current, initialRow }))}
           hint="이미 몇 단 진행했다면 그 숫자부터 시작해도 괜찮아요."
         />
-        <TextField
-          label="실 정보"
-          placeholder="예: 메리노 울 4ply, 크림 베이지"
-          value={draft.yarnInfo}
-          onChangeText={(yarnInfo) => setDraft((current) => ({ ...current, yarnInfo }))}
-        />
-        <TextField
-          label="바늘 정보"
-          placeholder="예: 3.5mm 원형 바늘, 80cm"
-          value={draft.needleInfo}
-          onChangeText={(needleInfo) => setDraft((current) => ({ ...current, needleInfo }))}
-        />
+        <View style={styles.choiceSection}>
+          <Text style={styles.label}>실 굵기</Text>
+          <View style={styles.chipRow}>
+            {yarnWeightOptions.map((option) => {
+              const selected = selectedYarnWeight === option;
+              return (
+                <Pressable
+                  accessibilityRole="button"
+                  key={option}
+                  onPress={() => setSelectedYarnWeight((current) => (current === option ? "" : option))}
+                  style={[styles.choiceChip, selected && styles.choiceChipActive]}
+                >
+                  <Text style={[styles.choiceChipText, selected && styles.choiceChipTextActive]}>{option}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <TextField
+            label=""
+            placeholder="실 메모"
+            value={yarnDetail}
+            onChangeText={setYarnDetail}
+          />
+        </View>
+        <View style={styles.choiceSection}>
+          <Text style={styles.label}>바늘 정보</Text>
+          <View style={styles.chipRow}>
+            {needleSizeOptions.map((option) => {
+              const selected = selectedNeedleSize === option;
+              return (
+                <Pressable
+                  accessibilityRole="button"
+                  key={option}
+                  onPress={() => setSelectedNeedleSize((current) => (current === option ? "" : option))}
+                  style={[styles.choiceChip, selected && styles.choiceChipActive]}
+                >
+                  <Text style={[styles.choiceChipText, selected && styles.choiceChipTextActive]}>{option}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <TextField
+            label=""
+            placeholder="추가 정보"
+            value={needleDetail}
+            onChangeText={setNeedleDetail}
+            hint="기본은 US 사이즈 기준으로 기록해 둘게요."
+          />
+        </View>
+        <View style={styles.choiceSection}>
+          <Text style={styles.label}>반복 단수</Text>
+          <View style={styles.chipRow}>
+            {repeatLengthOptions.map((option) => {
+              const selected = draft.repeatLength === option;
+              return (
+                <Pressable
+                  accessibilityRole="button"
+                  key={option}
+                  onPress={() => setDraft((current) => ({ ...current, repeatLength: current.repeatLength === option ? "" : option }))}
+                  style={[styles.choiceChip, selected && styles.choiceChipActive]}
+                >
+                  <Text style={[styles.choiceChipText, selected && styles.choiceChipTextActive]}>{option}단</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <TextField
+            label=""
+            keyboardType="number-pad"
+            placeholder="직접 입력"
+            value={draft.repeatLength}
+            onChangeText={(repeatLength) => setDraft((current) => ({ ...current, repeatLength }))}
+            hint="생성 후에도 작업 화면에서 바꿀 수 있어요."
+          />
+        </View>
         <TextField
           label="태그"
-          placeholder="예: 선물용 / 겨울 / 천천히 진행"
+          placeholder="태그"
           value={draft.tag}
           onChangeText={(tag) => setDraft((current) => ({ ...current, tag }))}
         />
@@ -112,10 +227,40 @@ const styles = StyleSheet.create({
   colorSection: {
     gap: spacing.xs,
   },
+  choiceSection: {
+    gap: spacing.sm,
+  },
   label: {
     fontSize: 14,
     fontWeight: "600",
     color: colors.text,
+  },
+  chipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  choiceChip: {
+    paddingHorizontal: spacing.md,
+    minHeight: 38,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  choiceChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primarySoft,
+  },
+  choiceChipText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: colors.textMuted,
+  },
+  choiceChipTextActive: {
+    color: colors.primary,
   },
   colorRow: {
     flexDirection: "row",

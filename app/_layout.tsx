@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { AuthProvider } from "@/context/AuthContext";
 import { useHydrateStore } from "@/hooks/useHydrateStore";
 
 export default function RootLayout() {
@@ -25,7 +26,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <AuthProvider>
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
@@ -40,7 +41,8 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="auth" options={{ presentation: "modal" }} />
       </Stack>
-    </>
+    </AuthProvider>
   );
 }

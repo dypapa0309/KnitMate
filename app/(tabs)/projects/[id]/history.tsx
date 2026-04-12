@@ -33,6 +33,7 @@ export default function HistoryScreen() {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <SectionHeader
+            showBack
             title={`${project.title} 히스토리`}
             subtitle="복구를 실행하면 현재 상태를 덮기 전에 복구 기록도 새 히스토리로 남깁니다."
           />
