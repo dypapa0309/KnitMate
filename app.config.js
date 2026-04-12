@@ -50,8 +50,7 @@ module.exports = withNoCameraPermission({
       backgroundColor: "#F7F3EE",
     },
     package: "com.knitmate.app",
-    versionCode: 8,
-    targetSdkVersion: 35,
+    versionCode: 9,
   },
   extra: {
     localOnly: false,
