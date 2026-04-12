@@ -40,6 +40,10 @@ module.exports = withNoCameraPermission({
         android: {
           compileSdkVersion: 35,
           targetSdkVersion: 35,
+          newArchEnabled: false,
+        },
+        ios: {
+          newArchEnabled: false,
         },
       },
     ],
